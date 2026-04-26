@@ -1,16 +1,11 @@
 import requests
 import json
 
-# ======================
-# CONFIGURATION
-# ======================
-TITLE_ID = "8d85f"        # Replace with your PlayFab Title ID
-CUSTOM_ID = "daddyvdb"  # Any unique identifier for testing
-CATALOG_VERSION = "Cosmetics"   # The catalog version you want to fetch
+TITLE_ID = input("Title ID: ")
+CUSTOM_ID = input("Custom ID: ")
+CATALOG_VERSION = input("Catalog Version: ")   
 
-# ======================
-# 1️⃣ LOGIN
-# ======================
+
 LOGIN_URL = f"https://{TITLE_ID}.playfabapi.com/Client/LoginWithCustomID"
 
 login_payload = {
@@ -32,11 +27,9 @@ if login_resp.status_code != 200 or "SessionTicket" not in login_data.get("data"
     exit(1)
 
 session_ticket = login_data["data"]["SessionTicket"]
-print("✅ Login successful. SessionTicket acquired.")
+print("Login worked with ss ticket ")
 
-# ======================
-# 2️⃣ GET CATALOG ITEMS
-# ======================
+
 CATALOG_URL = f"https://{TITLE_ID}.playfabapi.com/Client/GetCatalogItems"
 
 headers["X-Authorization"] = session_ticket
@@ -55,8 +48,8 @@ if catalog_resp.status_code != 200:
 else:
     catalog_items = catalog_data.get("data", {}).get("Catalog", [])
     if not catalog_items:
-        print(f"⚠️ Catalog is empty. Make sure '{CATALOG_VERSION}' is published and has items.")
+        print(f" Catalog empty. make sure '{CATALOG_VERSION}' existed")
     else:
-        print(f"✅ Retrieved {len(catalog_items)} items from catalog '{CATALOG_VERSION}':\n")
+        print(f" Pulled {len(catalog_items)} items from catalog '{CATALOG_VERSION}':\n")
         for item in catalog_items:
             print(json.dumps(item, indent=2))
